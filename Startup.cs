@@ -21,26 +21,53 @@ namespace newHttp
     {
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        string[] urls = { "http://localhost:5000" };
+        /* string[] urls = { "http://feb2ec000271.ngrok.io",
+                             "http://df1f5b98672e.ngrok.io",
+                             "http://5b341e7ae688.ngrok.io",
+                             "http://74334191d2b3.ngrok.io",
+                             "http://14add9edba41.ngrok.io",
+                             "http://9220ec0c3226.ngrok.io",
+                             "http://8ef7bd7680d4.ngrok.io",
+                             "http://700b7e95e1da.ngrok.io",
+                             "http://771e37434dfe.ngrok.io" 
+                             "http://ef845d6343d7.ngrok.io", 
+                             "http://5e9e572e07b3.ngrok.io", 
+                             "http://67e5aa89deb6.ngrok.io"};*/
+        string[] who = { "Люк Скайуокер", "Тайлер Дерден", "Джек Воробей", "Нео", "Т-800", "Чубака" };
+        string[] how = { "красиво", "хитро", "виртуозно", "умно", "глупо", "лучше всех", "просто" };
+        string[] does = { "пишет", "танцует", "ест", "бросает" };
+        string[] what = { "маслину", "код", "брейк-данс", "письмо", "ламбаду" };
+        
         public void ConfigureServices(IServiceCollection services)
         {
+        }
+
+        public string chooseStrategy(string[] urls)
+        {
+            IGetQuote strategy;
+            if (Program.arguments.Length == 0)
+            {
+                strategy = new Sync();
+                
+            } else
+            {
+                strategy = new Async();
+                
+            }
+            return strategy.getQuote(urls);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseRouting();
-
-            string[] who = { "Люк Скайуокер", "Тайлер Дерден", "Джек Воробей", "Нео", "Т-800", "Чубака" };
-            string[] how = { "красиво", "хитро", "виртуозно", "умно", "глупо", "лучше всех", "просто" };
-            string[] does = { "пишет", "танцует", "ест", "бросает" };
-            string[] what = { "маслину", "код", "брейк-данс", "письмо", "ламбаду"};
             var rand = new Random();
-                
+            app.UseRouting(); 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/who", async context =>
@@ -98,51 +125,13 @@ namespace newHttp
                 {
                     context.Response.ContentType = "text/html; charset=utf-8";
                     context.Response.Headers.Add("InCamp-Student", "Bogdan Kovalchuk");
-                    await context.Response.WriteAsync(getQuote());
-                    await context.Response.WriteAsync(getQuoteAsync().Result);
+                    await context.Response.WriteAsync(chooseStrategy(urls));
                 });
             });
             
         }
 
-        //string[] urls = { "https://8a2f59ef9085.ngrok.io", "http://12f1a14e7e50.ngrok.io", "http://4c1449a93861.ngrok.io", "http://7a45a5f78857.ngrok.io", "http://e77fd3b7ed59.ngrok.io", "http://a089177a583a.ngrok.io", "http://aba617d86eae.ngrok.io", "http://26b139b05b0f.ngrok.io", "http://17f7ddd05769.ngrok.io", "http://ef845d6343d7.ngrok.io", "http://5e9e572e07b3.ngrok.io", "http://67e5aa89deb6.ngrok.io"};
-        string[] urls = { "http://f53f6340146f.ngrok.io" };
-        public string getQuote()
-        {
-            var watch = Stopwatch.StartNew();
-
-            RandomWord who = getWord(randomUrl() + "/who");
-            RandomWord how = getWord(randomUrl() + "/how");
-            RandomWord does = getWord(randomUrl() + "/does");
-            RandomWord what = getWord(randomUrl() + "/what");
-
-            RandomWord[] temp = { who, how, does, what };
-            string outputData = writeDateIntoString(temp);
-
-            watch.Stop();
-            outputData += $"Execution Time: {watch.ElapsedMilliseconds} ms <br><br>";
-
-            return outputData;
-        }
-
-        public async Task<string> getQuoteAsync()
-        {
-            var watch = Stopwatch.StartNew();
-
-            Task<RandomWord> who = Task.Run(() => getWord(randomUrl() + "/who"));
-            Task<RandomWord> how = Task.Run(() => getWord(randomUrl() + "/how"));
-            Task<RandomWord> does = Task.Run(() => getWord(randomUrl() + "/does"));
-            Task<RandomWord> what = Task.Run(() => getWord(randomUrl() + "/what"));
-
-            var words = await Task.WhenAll(who, how, does, what);
-            string outputData = writeDateIntoString(words);
-
-            watch.Stop();
-            outputData += $"Execution Time: {watch.ElapsedMilliseconds} ms ";
-            return outputData;
-        }
-
-        public RandomWord getWord(string url)
+        public static RandomWord getWord(string url)
         {
             string word;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -157,13 +146,13 @@ namespace newHttp
             response.Close();
             return temp;
         }
-        public string randomUrl()
+        public static string randomUrl(string[] urls)
         {
             var rand = new Random();
             return urls[rand.Next(urls.Length)];
         }
 
-        public string writeDateIntoString (RandomWord[] words)
+        public static string writeDateIntoString (RandomWord[] words)
         {
             string quote = words[0].word + " " + words[1].word + " " + words[2].word + " " + words[3].word + "<br>";
             quote += words[0].nameFromHeader + "\t'received from' -> " + words[0].nameFromHeader + "<br>";
