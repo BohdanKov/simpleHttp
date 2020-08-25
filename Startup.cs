@@ -21,19 +21,9 @@ namespace newHttp
     {
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        string[] urls = { "http://localhost:5000" };
-        /* string[] urls = { "http://feb2ec000271.ngrok.io",
-                             "http://df1f5b98672e.ngrok.io",
-                             "http://5b341e7ae688.ngrok.io",
-                             "http://74334191d2b3.ngrok.io",
-                             "http://14add9edba41.ngrok.io",
-                             "http://9220ec0c3226.ngrok.io",
-                             "http://8ef7bd7680d4.ngrok.io",
-                             "http://700b7e95e1da.ngrok.io",
-                             "http://771e37434dfe.ngrok.io" 
-                             "http://ef845d6343d7.ngrok.io", 
-                             "http://5e9e572e07b3.ngrok.io", 
-                             "http://67e5aa89deb6.ngrok.io"};*/
+        //string[] urls = { "http://localhost:5000" };
+        string[] urls = { "http://server1", "http://server2", "http://server3" };
+
         string[] who = { "Люк Скайуокер", "Тайлер Дерден", "Джек Воробей", "Нео", "Т-800", "Чубака" };
         string[] how = { "красиво", "хитро", "виртуозно", "умно", "глупо", "лучше всех", "просто" };
         string[] does = { "пишет", "танцует", "ест", "бросает" };
@@ -57,6 +47,7 @@ namespace newHttp
             }
             return strategy.getQuote(urls);
         }
+        string hostname = Dns.GetHostName();
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -73,7 +64,7 @@ namespace newHttp
                 endpoints.MapGet("/who", async context =>
                 {
                     context.Response.ContentType = "text/html; charset=utf-8";
-                    context.Response.Headers.Add("InCamp-Student", "Bogdan Kovalchuk");
+                    context.Response.Headers.Add("InCamp-Student", hostname);
                     await context.Response.WriteAsync(who[rand.Next(who.Length)]);
                 });
             });
@@ -83,7 +74,7 @@ namespace newHttp
                 endpoints.MapGet("/how", async context =>
                 {   
                     context.Response.ContentType = "text/html; charset=utf-8";
-                    context.Response.Headers.Add("InCamp-Student", "Bogdan Kovalchuk");
+                    context.Response.Headers.Add("InCamp-Student", hostname);
                     await context.Response.WriteAsync(how[rand.Next(how.Length)]);
                 });
             });
@@ -93,7 +84,7 @@ namespace newHttp
                 endpoints.MapGet("/does", async context =>
                 {
                     context.Response.ContentType = "text/html; charset=utf-8";
-                    context.Response.Headers.Add("InCamp-Student", "Bogdan Kovalchuk");
+                    context.Response.Headers.Add("InCamp-Student", hostname);
                     await context.Response.WriteAsync(does[rand.Next(does.Length)]);
                 });
             });
@@ -103,7 +94,7 @@ namespace newHttp
                 endpoints.MapGet("/what", async context =>
                 {
                     context.Response.ContentType = "text/html; charset=utf-8";
-                    context.Response.Headers.Add("InCamp-Student", "Bogdan Kovalchuk");
+                    context.Response.Headers.Add("InCamp-Student", hostname);
                     await context.Response.WriteAsync(what[rand.Next(what.Length)]);
                 });
             });
@@ -113,8 +104,7 @@ namespace newHttp
                 endpoints.MapGet("/quote", async context =>
                 {
                     context.Response.ContentType = "text/html; charset=UTF-8";
-                    
-                    context.Response.Headers.Add("InCamp-Student", "Bogdan Kovalchuk");
+                    context.Response.Headers.Add("InCamp-Student", hostname);
                     await context.Response.WriteAsync(who[rand.Next(who.Length)] + " " + how[rand.Next(how.Length)] + " " + does[rand.Next(does.Length)] + " " + what[rand.Next(what.Length)]);
                 });
             });
@@ -124,7 +114,7 @@ namespace newHttp
                 endpoints.MapGet("/incamp18-quote", async context =>
                 {
                     context.Response.ContentType = "text/html; charset=utf-8";
-                    context.Response.Headers.Add("InCamp-Student", "Bogdan Kovalchuk");
+                    context.Response.Headers.Add("InCamp-Student", hostname);
                     await context.Response.WriteAsync(chooseStrategy(urls));
                 });
             });
@@ -155,19 +145,11 @@ namespace newHttp
         public static string writeDateIntoString (RandomWord[] words)
         {
             string quote = words[0].word + " " + words[1].word + " " + words[2].word + " " + words[3].word + "<br>";
-            quote += words[0].nameFromHeader + "\t'received from' -> " + words[0].nameFromHeader + "<br>";
-            quote += words[1].nameFromHeader + "\t'received from'-> " + words[1].nameFromHeader + "<br>";
-            quote += words[2].nameFromHeader + "\t'received from' -> " + words[2].nameFromHeader + "<br>";
-            quote += words[3].nameFromHeader + "\t'received from' -> " + words[3].nameFromHeader + "<br>";
+            quote += words[0].word + "\t'received from' -> " + words[0].nameFromHeader + "<br>";
+            quote += words[1].word + "\t'received from' -> " + words[1].nameFromHeader + "<br>";
+            quote += words[2].word + "\t'received from' -> " + words[2].nameFromHeader + "<br>";
+            quote += words[3].word + "\t'received from' -> " + words[3].nameFromHeader + "<br>";
             return quote;
         }
-
-        
-
-
-
-        
-
-
     }
 }

@@ -1,0 +1,36 @@
+version: '3'
+
+services: 
+    
+    server1:
+        image: simple-http
+        container_name: server1
+        ports: 
+            - 5051:80
+        deploy:
+            resources:
+                limits:
+                    memory: 50M
+        
+
+    server2:
+        image: simple-http
+        container_name: server2
+        ports: 
+            - 5052:80
+        deploy:
+            resources:
+                limits:
+                    memory: 50M
+        
+
+    server3:
+        image: simple-http
+        container_name: server3
+        ports: 
+            - 5053:80
+        deploy:
+            resources:
+                limits:
+                    memory: 50M
+        
