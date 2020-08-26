@@ -7,6 +7,6 @@ namespace newHttp
 {
     interface IGetQuote
     {
-        public string getQuote(string[] urls);
+        public RandomWord[] getQuote(string[] urls);
     }
 }

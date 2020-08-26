@@ -4,7 +4,9 @@ services:
     
     server1:
         image: simple-http
-        container_name: server1
+        hostname: server1
+        environment:
+          - urls_list=http://server1,http://server2,http://server3
         ports: 
             - 5051:80
         deploy:
@@ -12,10 +14,11 @@ services:
                 limits:
                     memory: 50M
         
-
     server2:
         image: simple-http
-        container_name: server2
+        hostname: server2
+        environment:
+          - urls_list=http://server1,http://server2,http://server3
         ports: 
             - 5052:80
         deploy:
@@ -23,10 +26,11 @@ services:
                 limits:
                     memory: 50M
         
-
     server3:
         image: simple-http
-        container_name: server3
+        hostname: server3
+        environment:
+          - urls_list=http://server1,http://server2,http://server3
         ports: 
             - 5053:80
         deploy:

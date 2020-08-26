@@ -8,22 +8,16 @@ namespace newHttp
 {
     public class Sync : IGetQuote
     {
-        public string getQuote(string[] urls)
+        public RandomWord[] getQuote(string[] urls)
         {
-            var watch = Stopwatch.StartNew();
-
-            RandomWord who = Startup.getWord(Startup.randomUrl(urls) + "/who");
-            RandomWord how = Startup.getWord(Startup.randomUrl(urls) + "/how");
-            RandomWord does = Startup.getWord(Startup.randomUrl(urls) + "/does");   
-            RandomWord what = Startup.getWord(Startup.randomUrl(urls) + "/what");
+            RandomWord who = RandomWord.getWord(urls[0]);
+            RandomWord how = RandomWord.getWord(urls[1]);
+            RandomWord does = RandomWord.getWord(urls[2]);
+            RandomWord what = RandomWord.getWord(urls[3]);
 
             RandomWord[] temp = { who, how, does, what };
-            string outputData = Startup.writeDateIntoString(temp);
 
-            watch.Stop();
-            outputData += $"Execution Time: {watch.ElapsedMilliseconds} ms <br><br>";
-
-            return outputData;
+            return temp;
         }
     }
 }

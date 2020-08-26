@@ -8,22 +8,17 @@ namespace newHttp
 {
     public class Async : IGetQuote
     {
-        public async Task<string> getQuoteAsync(string[] urls)
+        public async Task<RandomWord[]> getQuoteAsync(string[] urls)
         {
-            var watch = Stopwatch.StartNew();
+            Task<RandomWord> who = Task.Run(() => RandomWord.getWord(urls[0]));
+            Task<RandomWord> how = Task.Run(() => RandomWord.getWord(urls[0]));
+            Task<RandomWord> does = Task.Run(() => RandomWord.getWord(urls[0]));
+            Task<RandomWord> what = Task.Run(() => RandomWord.getWord(urls[0]));
 
-            Task<RandomWord> who = Task.Run(() => Startup.getWord(Startup.randomUrl(urls) + "/who"));
-            Task<RandomWord> how = Task.Run(() => Startup.getWord(Startup.randomUrl(urls) + "/how"));
-            Task<RandomWord> does = Task.Run(() => Startup.getWord(Startup.randomUrl(urls) + "/does"));
-            Task<RandomWord> what = Task.Run(() => Startup.getWord(Startup.randomUrl(urls) + "/what"));
+            RandomWord[] words = await Task.WhenAll(who, how, does, what);
 
-            var words = await Task.WhenAll(who, how, does, what);
-            string outputData = Startup.writeDateIntoString(words);
-
-            watch.Stop();
-            outputData += $"Execution Time: {watch.ElapsedMilliseconds} ms ";
-            return outputData;
+            return words;
         }
-        public string getQuote(string[] urls) => getQuoteAsync(urls).Result;
+        public RandomWord[] getQuote(string[] urls) => getQuoteAsync(urls).Result;
     }
 }
